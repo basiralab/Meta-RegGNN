@@ -4,10 +4,10 @@ and running MetaRegGNN and sample selection methods.
 
 Usage:
     For data processing:
-        python demo.py --mode data 
+        python demo.py --mode data
 
     For inferences:
-        python demo.py --mode infer 
+        python demo.py --mode infer
 
     For more information:
         python demo.py -h
@@ -34,7 +34,7 @@ if opts.mode == 'data':
     '''
     Connectome and scores are simulated to the folder specified in config.py.
     '''
-    data_utils.create_dataset() 
+    data_utils.create_dataset()
     print(f"Data and topological features are created and saved at {Config.DATA_FOLDER} successfully.")
 
 elif opts.mode == 'infer':
@@ -54,17 +54,9 @@ elif opts.mode == 'infer':
                                                   dropout=Config.MetaRegGNN.DROPOUT,
                                                   lr=Config.MetaRegGNN.LR, wd=Config.MetaRegGNN.WD, device=device,
                                                   num_epoch=Config.MetaRegGNN.NUM_EPOCH)
-    if Config.SampleSelection.SAMPLE_SELECTION:
-        mae_arr = [mae_evaluator(p, s) for p, s in zip(preds.values(), scores.values())]
-        rmse_arr = [rmse_evaluator(p, s) for p, s in zip(preds.values(), scores.values())]
-        print(f"For k in {Config.SampleSelection.K_LIST}:")
-        print(f"Mean MAE +- std over k: {np.mean(mae_arr):.3f} +- {np.std(mae_arr):.3f}")
-        print(f"Min, Max MAE over k: {np.min(mae_arr):.3f}, {np.max(mae_arr):.3f}")
-        print(f"Mean RMSE +- std over k: {np.mean(rmse_arr):.3f} +- {np.std(rmse_arr):.3f}")
-        print(f"Min, Max RMSE over k: {np.min(rmse_arr):.3f}, {np.max(rmse_arr):.3f}")
-    else:
-        print(f"MAE: {mae_evaluator(preds, scores):.3f}")
-        print(f"RMSE: {rmse_evaluator(preds, scores):.3f}")
+
+    print(f"MAE: {mae_evaluator(preds, scores):.3f}")
+    print(f"RMSE: {rmse_evaluator(preds, scores):.3f}")
 
     with open(f"{Config.RESULT_FOLDER}preds.pkl", 'wb') as f:
         pickle.dump(preds, f)
